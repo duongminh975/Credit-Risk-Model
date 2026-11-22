@@ -2,10 +2,9 @@
 DỰ ÁN 1 — Mô hình xác suất vỡ nợ (PD) và Thẻ điểm rủi ro tín dụng
 =====================================================================
 Bộ dữ liệu : Statlog (German Credit) — 1.000 hồ sơ vay vốn, 20 thuộc tính
-Nguồn      : UCI Machine Learning Repository (bộ dữ liệu chuẩn dùng trong nghiên cứu)
 
 Phương pháp thực hiện theo quy trình xây dựng thẻ điểm tín dụng bán lẻ
-chuẩn (khung phương pháp Siddiqi):
+chuẩn:
     1. Phân nhóm (coarse classing) từng thuộc tính thành các khoảng
     2. Chuyển đổi từng nhóm bằng trọng số bằng chứng (WOE)
     3. Tính giá trị thông tin (IV) để lựa chọn biến
@@ -86,7 +85,7 @@ train_binned = apply_bins(train)
 test_binned = apply_bins(test)
 
 # ----------------------------------------------------------------------------
-# 3. TRỌNG SỐ BẰNG CHỨNG (WOE) VÀ GIÁ TRỊ THÔNG TIN (IV)
+# 3. WOE và IV
 # ----------------------------------------------------------------------------
 #   WOE = ln( %Khách_hàng_tốt_trong_nhóm / %Khách_hàng_xấu_trong_nhóm ) -> WOE cao hơn = rủi ro thấp hơn
 #   IV  = TỔNG ( %Khách_hàng_tốt - %Khách_hàng_xấu ) * WOE
@@ -144,7 +143,7 @@ print("2. GIÁ TRỊ THÔNG TIN — xếp hạng biến")
 print("=" * 78)
 print(iv_table.to_string(index=False, float_format=lambda x: f"{x:.4f}"))
 
-# Giữ các biến có IV từ mức 'Yếu' trở lên — thông lệ thường loại biến có IV < 0.02
+# Giữ các biến có IV từ mức 'Yếu' trở lên — loại biến có IV < 0.02
 SELECTED = iv_table.loc[iv_table["iv"] >= 0.02, "feature"].tolist()
 print(f"\nSố biến được giữ lại (IV >= 0.02): {len(SELECTED)} of {len(features)}")
 
@@ -193,7 +192,7 @@ print(f"{'KS':<12}{ks_tr:>12.4f}{ks_te:>12.4f}")
 print(f"\nChênh lệch AUC (huấn luyện - kiểm tra): {auc_tr - auc_te:.4f}")
 
 # ----------------------------------------------------------------------------
-# 6. THẺ ĐIỂM DẠNG ĐIỂM SỐ
+# 6. POINTS-BASED SCORECARD
 # ----------------------------------------------------------------------------
 #   Điểm = Offset + Factor * ln(odds_good)
 #   Factor = PDO / ln(2)      Offset = Điểm_cơ_sở - Factor * ln(Odds_cơ_sở)
