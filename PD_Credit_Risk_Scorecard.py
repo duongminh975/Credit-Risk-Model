@@ -254,8 +254,8 @@ grade_tbl = res.groupby("grade", observed=True).agg(
 
 # Tổn thất kỳ vọng = PD x LGD x EAD (công thức theo Basel)
 LGD = 0.45   # Mức tham chiếu Basel Foundation IRB đối với khoản vay bán lẻ không có tài sản bảo đảm
-EAD = 250000  # dư nợ giả định bình quân mỗi hồ sơ, đơn vị INR
-grade_tbl["expected_loss_inr"] = (grade_tbl["predicted_pd"] * LGD * EAD
+EAD = 250000  # dư nợ giả định bình quân mỗi hồ sơ, đơn vị EUR
+grade_tbl["expected_loss_eur"] = (grade_tbl["predicted_pd"] * LGD * EAD
                                   * grade_tbl["accounts"]).round(0)
 
 print()
